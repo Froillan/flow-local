@@ -1,33 +1,64 @@
-# Flow Local (beta 0.1)
+# Flow Local (beta 0.1.0)
 
-Dictado por voz para macOS que corre **100 % en tu Mac**: sin nube, sin cuenta y sin límite de palabras.
-Mantén **fn**, habla, suelta, y el texto se pega en la app donde estés. Usa [whisper.cpp](https://github.com/ggerganov/whisper.cpp) para transcribir.
+Dictado por voz para Mac que corre **100 % en tu computadora**: sin nube, sin cuenta y sin límite de palabras.
+Mantén la tecla para hablar, suelta, y el texto se pega donde estés. Transcribe con [whisper.cpp](https://github.com/ggerganov/whisper.cpp).
 
-## Funciones
-- **Dictado con fn** en cualquier app (mantener para hablar, doble toque para manos libres, Esc para cancelar).
-- **Estadísticas**: palabras, racha, ppm, uso por app y perfil de voz por niveles.
-- **Diccionario, fragmentos y estilos** (natural, literal, formal, casual, por app), con sugerencias automáticas.
-- **Tomador de notas** y **Reuniones** (graba por tramos y transcribe; solo captura tu micrófono).
-- Panel web local en http://127.0.0.1:4500 y app nativa `Flow Local.app`.
+## Instalación rápida
 
-## Requisitos
-macOS 13+, `node` 20+, `ffmpeg` y `whisper-cpp` (`brew install node ffmpeg whisper-cpp`), Command Line Tools (`xcode-select --install`)
-y un modelo ggml en `~/Documents/whisper-models/` (por ejemplo `ggml-large-v3-turbo.bin`, `ggml-small.bin`).
+**Requisitos:** macOS 13 o más nuevo.
 
-## Uso
-Solo el panel web:
-```bash
-node server.mjs
-```
-App nativa (necesaria para fn):
-```bash
-cd app && ./build.sh
-```
-Luego: Ajustes del Sistema → Teclado → "Pulsa la tecla 🌐 para" → **No hacer nada**, y concede Accesibilidad, Monitoreo de entrada y Micrófono a Flow Local.
+1. **Instala las herramientas** (en Terminal):
 
-Variables útiles: `PORT`, `MODELS_DIR`, `FFMPEG`, `WHISPER`, `WHISPER_SERVER`, `FLOW_DATA`, `FLOW_DIR`.
+   ```bash
+   brew install node ffmpeg whisper-cpp
+   ```
 
-## Limitaciones conocidas
-- Reuniones: solo graba el micrófono (en llamadas, la otra persona se oye solo si va por altavoz).
-- Los permisos de macOS se ligan a la firma de la app; `build.sh` usa un certificado local "Flow Local Dev" si existe.
-- Estado beta: faltan licencia, rutas portables y nombre definitivo para publicarlo.
+   Si no tienes Homebrew, instálalo desde https://brew.sh. Si `brew` no existe, el comando de arriba no funciona.
+
+2. **Descarga un modelo** a la carpeta `~/Documents/whisper-models`:
+
+   ```bash
+   mkdir -p ~/Documents/whisper-models && curl -L -o ~/Documents/whisper-models/ggml-small.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.bin
+   ```
+
+   `small` pesa unos 500 MB y funciona en cualquier Mac. Para más precisión, cambia `small` por `large-v3-turbo` (pesa unos 1.6 GB y necesita más memoria).
+
+3. **Compila e instala la app:**
+
+   ```bash
+   cd app && ./build.sh
+   ```
+
+   Esto crea `Flow Local.app` y la instala en `~/Applications`. Ábrela desde Spotlight.
+
+4. **Da permisos** en Ajustes del Sistema → Privacidad y seguridad, a **Flow Local**:
+   - **Accesibilidad**
+   - **Monitoreo de entrada**
+   - **Micrófono**
+
+   Si macOS te pide reiniciar la app después de dar permisos, ciérrala y vuelve a abrirla.
+
+5. **Elige la tecla para dictar** en Perfil de voz. Por defecto es **fn**. Si tu teclado no tiene fn (por ejemplo, un Logi), usa **Detectar tecla** o elige F9–F20. En Ajustes del Sistema → Teclado, pon "Pulsa la tecla 🌐 para" en **No hacer nada** para que fn no abra el selector de emojis.
+
+## Cómo se usa
+
+- **Dictar:** mantén la tecla, habla y suelta. Doble toque para dictar con manos libres; otro toque para terminar.
+- **Panel:** la app abre un panel con Dictado, Estadísticas, Notas, Reuniones, Perfil de voz, Diccionario, Fragmentos y Estilos.
+- **Solo el panel web** (sin la app nativa, sin tecla): `node server.mjs` y abre http://127.0.0.1:4500.
+
+## Limitaciones de la beta
+
+- **Reuniones:** solo graba tu micrófono. En una llamada, la otra persona se oye únicamente si va por altavoz. Whisper a veces inventa frases en los silencios.
+- **Notas:** se guardan solo en este Mac, sin sincronización ni exportación.
+- **Modelos grandes:** el primer dictado después de cambiar de modelo tarda más, y `large-v3-turbo` necesita bastante memoria.
+- **Diccionario y Fragmentos:** dependen de que Whisper escriba igual lo que configuras.
+- **Permisos y firma:** la app firmada con el certificado local "Flow Local Dev" conserva los permisos al recompilar. Sin ese certificado, macOS puede pedirlos de nuevo cada vez que compilas.
+- **Tu historial** se guarda en `data/db.json`, que no se sube al repo.
+
+## Variables útiles
+
+`PORT`, `MODELS_DIR`, `FFMPEG`, `WHISPER`, `WHISPER_SERVER`, `FLOW_DATA`, `FLOW_DIR`, `NODE`.
+
+## Licencia
+
+Ver [LICENSE](LICENSE). Versión beta de uso personal, todavía sin licencia definitiva.
