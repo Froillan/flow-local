@@ -1,0 +1,6 @@
+data/
+Flow Local.app/
+*.log
+.DS_Store
+node_modules/
+helper/fnkey

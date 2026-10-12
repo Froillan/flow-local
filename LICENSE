@@ -1,0 +1,9 @@
+Flow Local — Licencia (beta, sin publicar)
+
+Copyright (c) 2026. Todos los derechos reservados.
+
+Este software es una versión beta de uso personal. Todavía no se autoriza su
+copia, redistribución ni uso comercial. La licencia definitiva se definirá
+cuando se publique.
+
+Usa whisper.cpp (MIT, https://github.com/ggerganov/whisper.cpp) para transcribir.
